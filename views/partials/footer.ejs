@@ -1,0 +1,18 @@
+    <footer>
+        <nav>
+            <ul>
+                <% if (state.hideSignout === false) { %>
+                    <li><a href="/signout">sign out</a></li>
+                <% } %>
+                <% if (state.hideSignin === false) { %>
+                    <li><a href="/signin">sign in</a></li>
+                <% } %>
+                <% if (state.hideSignup === false) { %>
+                    <li><a href="/signup" class="btn">sign up</a></li>
+                <% } %>
+            </ul>
+        </nav>
+    </footer>
+
+</body>
+</html>

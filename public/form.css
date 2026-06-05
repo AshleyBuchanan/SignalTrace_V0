@@ -1,0 +1,68 @@
+form {
+    margin: auto;
+    width: 480px;
+    height: 348px;
+    padding: 12px;
+    border-radius: 12px;
+    background-color: var(--background-light);
+    box-shadow: 0 8px 32px hsla(0, 0%, 0%, 0.5);
+    gap: 12px;
+}
+
+form.signup {
+    border: 1px solid transparent;
+    transition: 
+        border 250ms ease-in,
+        box-shadow 250ms ease-in;
+}
+
+form.signup.highlighted {
+    border: 1px solid var(--button-text-high);
+    box-shadow: 
+        0 8px 32px hsla(0, 0%, 0%, 0.5),
+        inset 0 0 2px var(--button-text-high),
+        0 0 5px var(--button-text-high),
+        0 0 10px 1px hsla(60, 100%, 50%, 0.5),
+        0 0 40px 1px hsla(60, 100%, 50%, 0.5);
+}
+
+form label, form input, form button {
+    margin: 0 12px;
+}
+
+form h2 {
+    padding: 12px;
+    margin: 0;
+}
+
+form input {
+    font-size: large;
+    padding: 6px 12px;
+    color: var(--background-light);
+    outline: none;
+}
+
+form button {
+    background-color: var(--button-color);
+    border-radius: 24px;
+    border: none;
+    padding: 12px;
+    margin: 24px 12px;
+    font-size: large;
+    transition: 
+        background-color 250ms ease-in-out,
+        color 250ms ease-in-out,
+        text-shadow 250ms ease-in-out,
+        box-shadow 250ms ease-in-out;
+}
+
+form button:hover {
+    background-color: var(--button-hover-color);
+}
+
+form button.signup-btn:hover {
+    box-shadow: 
+        inset 0 0 2px var(--button-text-high),
+        0 0 5px hsla(60, 100%, 50%, 0.5);
+}
+

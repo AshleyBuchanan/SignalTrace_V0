@@ -1,0 +1,100 @@
+*:not(title, script) {
+    display: flex;
+    flex-direction: column;
+
+    font-family: "Quicksand", sans-serif;
+    color: var(--button-text-high);
+}
+
+html {
+    margin: none;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--background);
+}
+
+body {
+    flex: 100%;
+
+    padding: 12px;
+    margin: 0;
+}
+
+main {
+    flex: 90%;
+    padding: 24px;
+}
+
+main div.welcome {
+    font-size: xx-large;
+}
+
+footer {
+    flex: 10%;
+    justify-content: end;
+}
+
+nav {
+    flex-direction: row-reverse;
+}
+
+nav ul {
+    flex-direction: row;
+    
+    margin: 0;
+    padding: 12px;
+}
+
+nav ul li a {
+    margin: none;
+    padding: 12px;
+    width: 96px;
+    border-radius: 24px;
+    text-align: center;
+    text-decoration: none;
+    transition: 
+        background-color 250ms ease-in-out,
+        color 250ms ease-in-out,
+        text-shadow 250ms ease-in-out,
+        box-shadow 250ms ease-in-out;
+    color: var(--button-text-low);
+}
+
+.btn {
+    border-radius: 24px;
+    background-color: var(--button-color);
+    color: white;
+}
+
+.btn:hover,
+nav ul li a:hover {
+    background-color: var(--button-hover-color);
+    color: var(--button-text-high);
+    text-shadow: 0 0 2px hsla(0, 0%, 100%, .5);
+    box-shadow: 0 0 2px hsla(0, 0%, 100%, .5);
+}
+
+.btn:active,
+nav ul li a:active {
+    box-shadow: inset 0 0 2px yellow;
+    translate: 0 2px;
+}
+
+nav ul:has(a:not(.btn):hover) .btn {
+    background-color: transparent;
+    color: var(--button-text-low);
+}
+
+
+:root {
+    --button-text-high: hsla(0, 0%, 100%, 1.0);
+    --button-text-low: hsla(0, 0%, 100%, 0.5);
+    --button-color: hsl(0, 61%, 32%);
+    --button-hover-color: hsl(342, 54%, 40%);
+    --primary: #60c0b6;
+    --primary-dark: #39687a;
+    --primary-light: #77d5df;
+    --background: hsl(0, 0%, 10%);
+    --background-light: hsl(0, 31%, 22%);
+}
+

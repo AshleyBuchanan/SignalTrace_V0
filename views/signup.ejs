@@ -1,0 +1,63 @@
+<%- include('partials/header') -%>
+
+<main>
+    <form  class="signup">
+        <h2>time to dive in</h2>
+        <label for="email">email</label>
+        <input type="text" name="email" required>
+        <div class="error email"></div>
+
+        <label for="password">password</label>
+        <input type="password" name="password" required>
+        <div class="error password"></div>
+        <button class="signup-btn">sign up</button>
+    </form>
+</main>
+
+
+
+<script>
+    const form = document.querySelector('form');
+    const emailError = document.querySelector('.error.email');
+    const passwordError = document.querySelector('.error.password');
+
+    form.addEventListener('submit', async e => {
+        e.preventDefault();
+
+        // reset errors
+        emailError.textContent = '';
+        passwordError.textContent = '';
+
+        const email = form.email.value;
+        const password = form.password.value;
+
+        try {
+            const res = await fetch('/signup', {
+                method: 'POST',
+                body: JSON.stringify({ email, password }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            const data = await res.json();
+
+            if (data.errors) {
+                emailError.textContent = data.errors.email;
+                passwordError.textContent = data.errors.password;
+            };
+
+            if (data.user) {
+                location.assign('/dashboard');
+            };
+            
+        } catch (err) {
+            console.log(err);
+        };
+    });
+
+    setTimeout(()=> {
+        form.classList.add('highlighted')
+    }, 125);
+
+</script>
+
+<%- include('partials/footer') -%>
