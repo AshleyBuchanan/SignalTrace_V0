@@ -1,22 +1,49 @@
 const mongoose = require('mongoose');
 
-const articleSchema = new mongoose.Schema({
-    source: String,
-    feedUrl: String,
+const evidenceLinkSchema = new mongoose.Schema(
+    {
+    url: String,
+    hostname: String,
+    type: String,
+    label: String,
+    confidence: Number,
+    },
+    { _id:false }
+);
 
-    title: String,
-    link: String,
-    author: String,
-    publishedAt: Date,
+const articleSchema = new mongoose.Schema(
+    {
+        source: String,
+        feedUrl: String,
 
-    summary: String,
-    content: String,
+        title: String,
+        link: String,
+        author: String,
+        publishedAt: Date,
 
-    guid: String,
-    categories: [String],
+        summary: String,
+        content: String,
 
-    raw: mongoose.Schema.Types.Mixed
-});
+        guid: String,
+        categories: [String],
+
+        raw: mongoose.Schema.Types.Mixed,
+
+        fetchAt: Date,
+        articleText: String,
+        excerpt: String,
+        outboundLinks: [evidenceLinkSchema],
+        articleType: String,
+        signalSource: Number,
+        traceStatus: {
+            type: String,
+            enum: ['rss_only', 'fetched', 'failed'],
+            default: 'rss_only',
+        },
+        traceError: String,
+    },
+    { timestamps: true }
+);
 
 articleSchema.statics.fromRssItem = function (item, feed, feedUrl) {
     return {
