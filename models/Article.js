@@ -2,13 +2,23 @@ const mongoose = require('mongoose');
 
 const evidenceLinkSchema = new mongoose.Schema(
     {
-    url: String,
-    hostname: String,
-    type: String,
-    label: String,
-    confidence: Number,
+        url: String,
+        hostname: String,
+        type: String,
+        label: String,
+        confidence: Number,
     },
     { _id:false }
+);
+
+const sourceClueSchema = new mongoose.Schema(
+    {
+        phrase: String,
+        type: String,
+        label: String,
+        confidence: Number,
+    },
+    { _id: false }
 );
 
 const articleSchema = new mongoose.Schema(
@@ -29,12 +39,15 @@ const articleSchema = new mongoose.Schema(
 
         raw: mongoose.Schema.Types.Mixed,
 
-        fetchAt: Date,
+        fetchedAt: Date,
         articleText: String,
         excerpt: String,
-        outboundLinks: [evidenceLinkSchema],
+        outboundLinks: [String],
+        evidenceLinks: [evidenceLinkSchema],
+        sourceClues: [sourceClueSchema],
+
         articleType: String,
-        signalSource: Number,
+        signalScore: Number,
         traceStatus: {
             type: String,
             enum: ['rss_only', 'fetched', 'failed'],

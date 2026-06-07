@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const rssServices = require('./services/rssServices');
 const { requireAuth, checkUser } = require('./middleware/authMiddleware');
-const authRoutes = require('./routes/authRoutes')
+const authRoutes = require('./routes/authRoutes');
+const articleRoutes = require('./routes/articleRoutes');
+
 require('dotenv').config({ quiet: true });
 
 // pre-am
@@ -26,6 +28,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(checkUser);
 app.use(authRoutes);
+app.use('/articles', articleRoutes);
 
 
 
