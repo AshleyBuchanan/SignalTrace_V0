@@ -19,16 +19,8 @@ async function traceOneArticle(req, res) {
         const traceData = await traceArticleFromUrl(articleUrl);
 
         console.log('Trace complete. Updating MongoDB...')
-        const updatedArticle = await Article.findByIdAndUpdate(
-            id,
-            {
-                $set: traceData,
-            },
-            {
-                new: true,
-                runValidators: true,
-            }
-        );
+        article.set(traceData);
+        const updatedArticle = await article.save();
 
         console.log('MongoDB update complete')
         res.json({
@@ -42,14 +34,19 @@ async function traceOneArticle(req, res) {
         console.log('TRACE ERROR:', err.message);
 
         if (req.params?.id) {
-            await Article.findByIdAndUpdate(req.params.id, {
-                $set: {
+            const failedArticle = await Article.findById(req.params.id);
+
+            if (failedArticle) {
+                failedArticle.set({
                     traceStatus: 'failed',
                     traceError: err.message,
                     fetchedAt: new Date(),
-                },
-            });
-        }
+                });
+
+                await failedArticle.save();
+            };
+        };
+
         res.status(500).json({
             error: 'Failed to trace article',
             details: err.message,
