@@ -1,0 +1,43 @@
+.manual-ingestion-label {
+    margin: 8px 12px;
+}
+
+.manual-ingestion {
+    flex-direction: row;
+    border-radius: 24px;
+    margin: 8px 1px 0 4px;
+    box-shadow: 0 8px 32px hsla(0, 0%, 0%, 0.5);
+    transition: all 250ms ease-in-out;
+}
+
+.manual-ingestion-input {  
+    padding: 4px 16px;
+    background-color: var(--button-color);
+    border-radius: 24px 0 0 24px;
+    border: none;
+    outline: none;
+    height: 36px;
+    width: calc(100% - 96px);
+}
+
+.manual-ingestion-submit {
+    justify-content: center;
+    text-align: center;
+    padding: 4px 16px;
+    width: 96px;
+    background-color: var(--button-color);
+    border-radius: 0 24px 24px 0;
+    border-left: 1px solid black;
+    transition: all 250ms ease-in-out;
+}
+
+.manual-ingestion.hover,
+.manual-ingestion.active {
+    box-shadow: 
+        0 8px 32px hsla(0, 0%, 0%, 0.5),
+        0 0 4px white;
+}
+
+.manual-ingestion-submit:hover {
+    background-color: var(--button-hover-color);
+}

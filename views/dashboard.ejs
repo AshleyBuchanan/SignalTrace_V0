@@ -1,8 +1,118 @@
 <%- include('./partials/header') %>
 <body>
     <main>
-        <div class="dashboard">Your dashboard will be here.</div>
+        <!-- <div class="dashboard">Dashboard</div> -->
+        <div class="current-rss-lineup-label">Current RSS Lineup</div>
+
+        <div class="current-rss-lineup">
+            <% for( let index = 0; index < state.payload.length; index++ ) { %>
+                <div class="rss-item">
+                    <div class="source"><%= state.payload[index].source %></div>
+                    <div class="title"><%= state.payload[index].title %></div>
+                    <div class="author"><%= state.payload[index].author || 'no author mentioned' %></div>
+                </div>
+            <% } %>
+            <% for( let index = 0; index < state.payload.length; index++ ) { %>
+                <div class="rss-item">
+                    <div class="source"><%= state.payload[index].source %></div>
+                    <div class="title"><%= state.payload[index].title %></div>
+                    <div class="author"><%= state.payload[index].author || 'no author mentioned' %></div>
+                </div>
+            <% } %>
+            <% for( let index = 0; index < state.payload.length; index++ ) { %>
+                <div class="rss-item">
+                    <div class="source"><%= state.payload[index].source %></div>
+                    <div class="title"><%= state.payload[index].title %></div>
+                    <div class="author"><%= state.payload[index].author || 'no author mentioned' %></div>
+                </div>
+            <% } %>
+        </div>
+
+        <div class="manual-ingestion-label">Manual URL Ingestion</div>
+        <div class="manual-ingestion">
+            <input class="manual-ingestion-input" type="text" placeholder="paste the url here">
+            <div class="manual-ingestion-submit">submit</div>
+        </div>
+        
     </main>
+
+    <script>
+        const rssLineup = document.querySelector('.current-rss-lineup');
+        const urlInput  = document.querySelector('.manual-ingestion-input');
+        const urlBar    = document.querySelector('.manual-ingestion');
+        const urlSubmit = document.querySelector('.manual-ingestion-submit');
+
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        rssLineup.addEventListener('mousedown', (e) => {
+            isDown = true;
+            rssLineup.classList.add('dragging');
+
+            startX = e.pageX - rssLineup.offsetLeft;
+            scrollLeft = rssLineup.scrollLeft;
+        });
+
+        rssLineup.addEventListener('mouseleave', () => {
+            isDown = false;
+            rssLineup.classList.remove('dragging');
+        });
+
+        rssLineup.addEventListener('mouseup', () => {
+            isDown = false;
+            rssLineup.classList.remove('dragging');
+        });
+
+        rssLineup.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+
+            e.preventDefault();
+
+            const x = e.pageX - rssLineup.offsetLeft;
+            const walk = x - startX;
+
+            rssLineup.scrollLeft = scrollLeft - walk;
+        });
+
+        urlInput.addEventListener('focus', e => {
+            e.preventDefault();
+
+            urlBar.classList.add('active');
+        });
+
+        urlInput.addEventListener('blur', e => {
+            e.preventDefault();
+
+            urlBar.classList.remove('active');
+        });
+
+        urlInput.addEventListener('mouseenter', e => {
+            e.preventDefault();
+
+            urlBar.classList.add('hover');
+        });
+
+        urlInput.addEventListener('mouseleave', e => {
+            e.preventDefault();
+
+            urlBar.classList.remove('hover');
+        });
+
+        urlSubmit.addEventListener('mouseenter', e => {
+            e.preventDefault();
+
+            urlBar.classList.add('hover');
+            urlSubmit.classList.add('hover');
+        });
+
+        urlSubmit.addEventListener('mouseleave', e => {
+            e.preventDefault();
+
+            urlBar.classList.remove('hover');
+            urlSubmit.classList.remove('hover');
+        });
+    </script>
 
     <%- include('./partials/footer') %>
 

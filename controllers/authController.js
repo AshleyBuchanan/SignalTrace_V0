@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Article = require('../models/Article');
 const jwt = require('jsonwebtoken');
 
 const maxAge = 3 * 24 * 60 * 60 * 1000;
@@ -44,11 +45,23 @@ module.exports.welcome_get = (req, res) => {
     res.render('welcome', { state });
 };
 
-module.exports.dashboard_get = (req, res) => {
+module.exports.dashboard_get = async (req, res) => {
+    const startOfToday = new Date();
+    startOfToday.setUTCHours(0, 0, 0, 0);
+    const endOfToday = new Date(startOfToday);
+    endOfToday.setUTCDate(startOfToday.getUTCDate() + 1);
+
     state.hideSignout = false;
     state.hideSignin = true;
     state.hideSignup = true;
     state.message = null;
+    state.payload = await Article.find({
+        traceStatus: 'fetched',
+        // publishedAt: {
+        //     $gte: startOfToday,
+        //     $lt: endOfToday
+        // }
+    });
     res.render('dashboard', { state });
 };
 

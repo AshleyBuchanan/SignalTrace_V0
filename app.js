@@ -18,7 +18,7 @@ mongoose.connect(process.env.DATABASE_URI, {})
 .catch((err) => console.log(err));
 
 // rss feeds
-rssServices.collectFeeds();
+//rssServices.collectFeeds();
 
 
 

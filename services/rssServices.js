@@ -9,6 +9,9 @@ const feedArray = [
   'https://www.npr.org/rss/rss.php?id=1001',
   'https://feeds.bbci.co.uk/news/world/rss.xml',
   'https://www.reutersagency.com/feed/?best-topics=political-general&post_type=best',
+  'https://feeds.nbcnews.com/msnbc',
+  'https://www.lemonde.fr/en/international/rss_full.xml',
+  'https://news.google.com/rss/search?q=site%3Areuters.com&hl=en-US&gl=US&ceid=US%3Aen'
 ];
 
 // rss collecting and storing

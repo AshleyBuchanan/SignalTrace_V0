@@ -6,23 +6,26 @@ async function traceOneArticle(req, res) {
     console.log('PARAMS:', req.params);
     try {
         const { id } = req.params;
-        console.log('Looking up article...')
+        console.log('Looking up article...');
+
         const article = await Article.findById(id);
-        console.log('Article lookup complete')
+        console.log('Article lookup complete');
+
         if (!article) return res.status(404).json({ error: 'Article not found', });
         
         const articleUrl = article.link || article.url;
         console.log('Article URL:', articleUrl);
+
         if (!articleUrl) return res.status(400).json({ error: 'Article has no link to trace', });
     
-        console.log('Starting trace...')
+        console.log('Starting trace...');
         const traceData = await traceArticleFromUrl(articleUrl);
+        console.log('Trace complete. Updating MongoDB...');
 
-        console.log('Trace complete. Updating MongoDB...')
         article.set(traceData);
         const updatedArticle = await article.save();
-
-        console.log('MongoDB update complete')
+        console.log('MongoDB update complete');
+        
         res.json({
             message: 'Article traced successfully',
             article: updatedArticle,
