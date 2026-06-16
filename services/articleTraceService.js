@@ -180,6 +180,7 @@ async function traceArticleFromUrl(url) {
         ].includes(link.type);
     });
 
+    console.log('Determining evidence links, signalScore, and article type...');
     const signalScore = calculateSignalScore(evidenceLinks);
     const articleType = determineArticleType(
         evidenceLinks,
@@ -188,6 +189,8 @@ async function traceArticleFromUrl(url) {
         url
     );
 
+    console.log('Done');
+    
     return {
         title,
         articleText,

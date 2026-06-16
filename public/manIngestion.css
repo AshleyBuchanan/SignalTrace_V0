@@ -29,6 +29,8 @@
     border-radius: 0 24px 24px 0;
     border-left: 1px solid black;
     transition: all 250ms ease-in-out;
+    cursor: pointer;
+    user-select: none;
 }
 
 .manual-ingestion.hover,
@@ -40,4 +42,10 @@
 
 .manual-ingestion-submit:hover {
     background-color: var(--button-hover-color);
+}
+
+.manual-ingestion-errors {
+    margin: 8px 24px;
+    font-size: smaller;
+    color: var(--button-color);
 }

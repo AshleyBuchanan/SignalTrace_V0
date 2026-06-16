@@ -28,6 +28,7 @@ const articleSchema = new mongoose.Schema(
 
         title: String,
         link: String,
+        url: String,
         author: String,
         publishedAt: Date,
 
@@ -50,7 +51,7 @@ const articleSchema = new mongoose.Schema(
         signalScore: Number,
         traceStatus: {
             type: String,
-            enum: ['rss_only', 'fetched', 'failed'],
+            enum: ['rss_only', 'fetched', 'parsed', 'metadata-only', 'failed'],
             default: 'rss_only',
         },
         traceError: String,
@@ -77,6 +78,28 @@ articleSchema.statics.fromRssItem = function (item, feed, feedUrl) {
         categories: item.categories || [],
 
         raw: item
+    };
+};
+
+articleSchema.statics.fromManualUrlParse = function(parsed, options = {}) {
+    return {
+        url: parsed.url,
+        link: parsed.url,
+        source: parsed.source || '',
+        title: parsed.title || '',
+        author: parsed.author || '',
+        publishedAt: parsed.publishedAt || null,
+        articleText: parsed.articleText || '',
+        excerpt: parsed.excerpt || '',
+        outboundLinks: parsed.outboundLinks || [],
+        evidenceLinks: parsed.evidenceLinks || [],
+        sourceClues: parsed.sourceClues || [],
+        articleType: parsed.articleType || 'unsupported_or_unclear',
+        signalScore: parsed.signalScore || 0,
+        fetchedAt: parsed.fetchedAt || new Date(),
+        traceStatus: parsed.traceStatus || 'fetched',
+        traceError: parsed.traceError || null,
+        ingestionMethod: options.ingestionMethod || 'manual-url'
     };
 };
 

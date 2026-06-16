@@ -1,5 +1,6 @@
 const Article = require('../models/Article');
 const { traceArticleFromUrl } = require('../services/articleTraceService');
+const articleIngestService = require('../services/articleIngestService');
 
 async function traceOneArticle(req, res) {
     console.log('TRACE ROUTE HIT');
@@ -25,7 +26,7 @@ async function traceOneArticle(req, res) {
         article.set(traceData);
         const updatedArticle = await article.save();
         console.log('MongoDB update complete');
-        
+
         res.json({
             message: 'Article traced successfully',
             article: updatedArticle,
@@ -54,8 +55,31 @@ async function traceOneArticle(req, res) {
             error: 'Failed to trace article',
             details: err.message,
         });
-    }
-}
+    };
+};
 
-module.exports = { traceOneArticle, };
+async function manual_url_post(req, res) {
+    console.log('MANUAL URL BODY:', req.body);
+    console.log('MANUAL URL CONTENT-TYPE:', req.headers['content-type']);
+
+    const { url } = req.body || {};
+    if (!url) {
+        return res.status(400).json({ error: 'No URL received by the server'});
+    };
+
+    try {
+        const article = await articleIngestService.ingestUrl(url, {
+            ingestionMethod: 'manual-url'
+        });
+
+        res.status(201).json({ article });
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({
+            error: 'Could not ingest that URL'
+        });
+    }
+};
+
+module.exports = { traceOneArticle, manual_url_post, };
 

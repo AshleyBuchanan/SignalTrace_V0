@@ -12,20 +12,6 @@
                     <div class="author"><%= state.payload[index].author || 'no author mentioned' %></div>
                 </div>
             <% } %>
-            <% for( let index = 0; index < state.payload.length; index++ ) { %>
-                <div class="rss-item">
-                    <div class="source"><%= state.payload[index].source %></div>
-                    <div class="title"><%= state.payload[index].title %></div>
-                    <div class="author"><%= state.payload[index].author || 'no author mentioned' %></div>
-                </div>
-            <% } %>
-            <% for( let index = 0; index < state.payload.length; index++ ) { %>
-                <div class="rss-item">
-                    <div class="source"><%= state.payload[index].source %></div>
-                    <div class="title"><%= state.payload[index].title %></div>
-                    <div class="author"><%= state.payload[index].author || 'no author mentioned' %></div>
-                </div>
-            <% } %>
         </div>
 
         <div class="manual-ingestion-label">Manual URL Ingestion</div>
@@ -33,6 +19,7 @@
             <input class="manual-ingestion-input" type="text" placeholder="paste the url here">
             <div class="manual-ingestion-submit">submit</div>
         </div>
+        <div class="manual-ingestion-errors"></div>
         
     </main>
 
@@ -41,6 +28,7 @@
         const urlInput  = document.querySelector('.manual-ingestion-input');
         const urlBar    = document.querySelector('.manual-ingestion');
         const urlSubmit = document.querySelector('.manual-ingestion-submit');
+        const urlError  = document.querySelector('.manual-ingestion-errors');
 
         let isDown = false;
         let startX;
@@ -64,9 +52,8 @@
             rssLineup.classList.remove('dragging');
         });
 
-        rssLineup.addEventListener('mousemove', (e) => {
+        rssLineup.addEventListener('mousemove', e => {
             if (!isDown) return;
-
             e.preventDefault();
 
             const x = e.pageX - rssLineup.offsetLeft;
@@ -77,41 +64,71 @@
 
         urlInput.addEventListener('focus', e => {
             e.preventDefault();
-
             urlBar.classList.add('active');
         });
 
         urlInput.addEventListener('blur', e => {
             e.preventDefault();
-
             urlBar.classList.remove('active');
         });
 
         urlInput.addEventListener('mouseenter', e => {
             e.preventDefault();
-
             urlBar.classList.add('hover');
         });
 
         urlInput.addEventListener('mouseleave', e => {
             e.preventDefault();
-
             urlBar.classList.remove('hover');
         });
 
         urlSubmit.addEventListener('mouseenter', e => {
             e.preventDefault();
-
             urlBar.classList.add('hover');
             urlSubmit.classList.add('hover');
         });
 
         urlSubmit.addEventListener('mouseleave', e => {
             e.preventDefault();
-
             urlBar.classList.remove('hover');
             urlSubmit.classList.remove('hover');
         });
+
+        urlSubmit.addEventListener('click', async e => {
+            e.preventDefault();
+
+            const url = urlInput.value.trim();
+
+            if (url === '') return;
+            else {
+                try {
+                    const res = await fetch(`/articles/manual`, {
+                        method: 'POST',
+                        body: JSON.stringify({ url }),
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+
+                    const data = await res.json();
+
+                    if (data.error) {
+                        urlError.textContent = data.error;
+                    } else {
+                        urlInput.value = '';
+                        urlError.value = '';
+                        location.assign('/dashboard');
+                    };
+
+
+                    // if (data.user) {
+                    //     location.assign('/dashboard');
+                    // };
+                    
+                } catch (err) {
+                    console.log(err);
+                };
+            }
+
+        })
     </script>
 
     <%- include('./partials/footer') %>
