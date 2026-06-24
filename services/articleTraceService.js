@@ -132,7 +132,7 @@ async function traceArticleFromUrl(url) {
     const controller = new AbortController();
     const timeout = setTimeout(() => {
             controller.abort()
-    }, 20000);
+    }, 5000);
 
     let response;
     try {
@@ -162,6 +162,40 @@ async function traceArticleFromUrl(url) {
     const title = readableArticle?.title || document.title || null;
     const articleText = readableArticle?.textContent || '';
 
+    console.log('Finding authors...');
+    const jsonLdAuthors = [...document.querySelectorAll('script[type="application/ld+json"]')]
+    .flatMap((script) => {
+        try {
+            const parsed = JSON.parse(script.textContent);
+            return Array.isArray(parsed) ? parsed : [parsed];
+        } catch (err) {
+            return [];
+        };
+    })
+    .flatMap((item) => {
+        const author = item?.author;
+
+        if (!author) return [];
+        if (Array.isArray(author)) return author;
+        return [author];
+    })
+    .map((author) => {
+        if (typeof author === 'string') return author;
+        return author?.name || null;
+    })                              
+    .filter(Boolean);
+    
+    const metadataAuthor = 
+        document.querySelector('meta[name="author"]')?.content ||
+        document.querySelector('meta[property="article:author"}')?.content ||
+    null;
+
+    const author = 
+        readableArticle?.byline ||
+        jsonLdAuthors[0] ||
+        metadataAuthor ||
+    null;
+    
     const sourceClues = detectSourceClues(articleText);
 
     const excerpt = readableArticle?.excerpt || '';
@@ -190,9 +224,10 @@ async function traceArticleFromUrl(url) {
     );
 
     console.log('Done');
-    
+
     return {
         title,
+        author,
         articleText,
         excerpt,
         outboundLinks,

@@ -3,7 +3,7 @@ const { traceArticleFromUrl } = require('./articleTraceService');
 
 async function ingestUrl(url, options = {}) {
     const normalizedUrl = normalizeUrl(url);
-
+    console.log(`NURL: ${normalizedUrl}`);
     const existingArticle = await Article.findOne({
         $or: [
             { url: normalizedUrl },
@@ -11,10 +11,11 @@ async function ingestUrl(url, options = {}) {
         ]
     });
 
-    if (existingArticle) {
+    if (existingArticle && existingArticle.traceStatus === 'fetched') {
         return existingArticle;
-    }
+    };
 
+    console.log('tracing');
     const traceData = await traceArticleFromUrl(normalizedUrl);
 
         const articleData = Article.fromManualUrlParse(

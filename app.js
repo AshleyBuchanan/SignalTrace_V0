@@ -21,7 +21,6 @@ mongoose.connect(process.env.DATABASE_URI, {})
 //rssServices.collectFeeds();
 
 
-
 // chain
 app.use(express.static('public'));
 app.use(express.json());

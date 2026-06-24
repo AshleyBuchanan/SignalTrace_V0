@@ -1,5 +1,6 @@
 const Parser = require('rss-parser');
 const Article = require('../models/Article');
+const articleIngestService = require('./articleIngestService');
 
 // pre-am
 const parser = new Parser();
@@ -36,8 +37,42 @@ async function collectFeeds() {
             console.log(feedUrl, ': success');
         } catch (err) {
             console.log(feedUrl, ': bad :', err.message)
-        }
+        };
+    };
+
+    //cycle through all db items and fetch(trace) if needed
+    const items = await Article.find({traceStatus: { $ne: 'fetched' } });
+    console.log(items.length)
+    for (const item of items) {
+               const articleUrl = item?.url || item?.link || null;
+
+        if (!articleUrl) {
+            console.log(`Article ${item._id} has no URL to trace`);
+            continue;
+        };
+
+        try {
+            const article = await articleIngestService.ingestUrl(articleUrl);
+
+            if (!article) {
+                console.log(`Article failed to trace: ${articleUrl}`);
+            } else {
+                console.log(`Article: ${article.title}: successfully traced`);
+            }
+        } catch (err) {
+            const message = err.name === 'AbortError'
+                ? 'Request timed out or was aborted'
+                : err.message;
+
+            console.log(`Article failed to trace: ${articleUrl}: ${message}`);
+
+            await Article.findByIdAndUpdate(item._id, {
+                traceStatus: 'failed',
+                traceError: message,
+            });
+        };
     };
 };
+
 
 module.exports = { collectFeeds };
