@@ -18,15 +18,24 @@ async function ingestUrl(url, options = {}) {
     console.log('tracing');
     const traceData = await traceArticleFromUrl(normalizedUrl);
 
-        const articleData = Article.fromManualUrlParse(
+    const articleData = Article.fromManualUrlParse(
         {
             ...traceData,
-            url: normalizedUrl,
+            url: traceData.finalUrl || normalizedUrl,
         },
         {
             ingestionMethod: options.ingestionMethod || 'manual-url'
         }
     );
+
+    if (existingArticle) {
+        const updatedArticle = await Article.findByIdAndUpdate(
+            existingArticle._id,
+            { $set: articleData },
+            { returnDocument: 'after' }
+        );
+        return updatedArticle;
+    }
 
     const article = await Article.create(articleData);
 

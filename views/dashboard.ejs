@@ -6,9 +6,9 @@
 
         <div class="current-rss-lineup">
             <% for( let index = 0; index < state.payload.length; index++ ) { %>
-                <div class="rss-item">
+                <div class="rss-item" data-_id="<%= state.payload[index]._id || 'no id' %>">
                     <div class="source"><%= state.payload[index].source %></div>
-                    <div class="title"><%= state.payload[index].title %></div>
+                    <div class="title" ><%= state.payload[index].title %></div>
                     <div class="author"><%= state.payload[index].author || 'no author mentioned' %></div>
                 </div>
             <% } %>
@@ -20,6 +20,11 @@
             <div class="manual-ingestion-submit">submit</div>
         </div>
         <div class="manual-ingestion-errors"></div>
+
+        <div class="active-item-view">
+
+        </div>
+        <div class="active-item-view-label">Active Item View</div>
         
     </main>
 
@@ -29,13 +34,26 @@
         const urlBar    = document.querySelector('.manual-ingestion');
         const urlSubmit = document.querySelector('.manual-ingestion-submit');
         const urlError  = document.querySelector('.manual-ingestion-errors');
-
-        let isDown = false;
+ 
         let startX;
         let scrollLeft;
+        let isDown  = false;
+        let didDrag = false;
+        const dragThreshold = 5;
+
+        document.querySelectorAll('.rss-item').forEach(item => {
+            item.addEventListener('click', e => {
+                e.preventDefault();
+
+                if(didDrag) return;
+
+                console.log(e.currentTarget.dataset._id);
+            });
+        });
 
         rssLineup.addEventListener('mousedown', (e) => {
-            isDown = true;
+            isDown  = true;
+            didDrag = false;
             rssLineup.classList.add('dragging');
 
             startX = e.pageX - rssLineup.offsetLeft;
@@ -50,15 +68,21 @@
         rssLineup.addEventListener('mouseup', () => {
             isDown = false;
             rssLineup.classList.remove('dragging');
+            setTimeout(() => {
+                didDrag = false;
+            }, 0);
         });
 
         rssLineup.addEventListener('mousemove', e => {
             if (!isDown) return;
-            e.preventDefault();
 
             const x = e.pageX - rssLineup.offsetLeft;
             const walk = x - startX;
 
+            if (Math.abs(walk) > dragThreshold) {
+                didDrag = true;
+                e.preventDefault();
+            }
             rssLineup.scrollLeft = scrollLeft - walk;
         });
 

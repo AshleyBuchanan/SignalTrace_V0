@@ -21,8 +21,8 @@ body {
 }
 
 main {
-    flex: 90%;
-    padding: 24px;
+    flex: 93%;
+    padding: 24px 24px 0 24px;
 }
 
 main div.welcome {
@@ -30,7 +30,7 @@ main div.welcome {
 }
 
 footer {
-    flex: 10%;
+    flex: 7%;
     justify-content: end;
 }
 

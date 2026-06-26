@@ -49,19 +49,16 @@ module.exports.dashboard_get = async (req, res) => {
     const startOfToday = new Date();
     startOfToday.setUTCHours(0, 0, 0, 0);
     const endOfToday = new Date(startOfToday);
-    endOfToday.setUTCDate(startOfToday.getUTCDate() + 1);
+    endOfToday.setUTCHours(23, 59, 59, 999);
 
     state.hideSignout = false;
     state.hideSignin = true;
     state.hideSignup = true;
     state.message = null;
-    state.payload = await Article.find({
-        traceStatus: 'fetched',
-        // publishedAt: {
-        //     $gte: startOfToday,
-        //     $lt: endOfToday
-        // }
-    });
+    state.payload = await Article.find({ traceStatus: 'fetched'})
+    .select(' _id source title author link publishedAt traceStatus')
+    .sort({ publishedAt: -1, createdAt: -1 })
+    .limit(50);
     res.render('dashboard', { state });
 };
 

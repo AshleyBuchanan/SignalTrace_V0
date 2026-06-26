@@ -86,4 +86,5 @@
 
 .rss-item div.author {
     color: var(--button-text-low);
+    font-weight: 800;
 }

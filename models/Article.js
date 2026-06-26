@@ -29,6 +29,7 @@ const articleSchema = new mongoose.Schema(
         title: String,
         link: String,
         url: String,
+        finalUrl: String,
         author: String,
         publishedAt: Date,
 
@@ -85,6 +86,7 @@ articleSchema.statics.fromManualUrlParse = function(parsed, options = {}) {
     return {
         url: parsed.url,
         link: parsed.url,
+        finalUrl: parsed.finalUrl || parsed.url,
         source: parsed.source || '',
         title: parsed.title || '',
         author: parsed.author || '',
