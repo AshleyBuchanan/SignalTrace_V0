@@ -12,7 +12,8 @@ const feedArray = [
   'https://www.reutersagency.com/feed/?best-topics=political-general&post_type=best',
   'https://feeds.nbcnews.com/msnbc',
   'https://www.lemonde.fr/en/international/rss_full.xml',
-  'https://news.google.com/rss/search?q=site%3Areuters.com&hl=en-US&gl=US&ceid=US%3Aen'
+  'https://news.google.com/rss/search?q=site%3Areuters.com&hl=en-US&gl=US&ceid=US%3Aen',
+  'https://rss.cnn.com/rss/edition.rss'
 ];
 
 // rss collecting and storing

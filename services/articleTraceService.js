@@ -1,6 +1,7 @@
 const { JSDOM } = require('jsdom');
 const { Readability } = require('@mozilla/readability');
 const { detectSourceClues } = require('./cluePatternsService');
+const { deriveSourceFromUrl } = require('./articleSourceService');
 const primarySourceDomains = {
     'sec.gov':                  'SEC filing',
     'justice.gov':              'DOJ source',
@@ -19,6 +20,17 @@ function normalizeHostname(url) {
         return new URL(url).hostname.replace(/^www\./, "");
     } catch (err) {
         return null;
+    };
+};
+
+function buildFetchHeaders(url) {
+    return {
+        'User-Agent':
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebkit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36 SignalTrace/0.1',
+        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Cache-Control': 'no-cache',
+        Referer: new URLSearchParams(url).origin,
     };
 };
 
@@ -141,17 +153,16 @@ async function traceArticleFromUrl(url) {
     try {
         response = await fetch(url, {
             signal: controller.signal,
-            headers: {
-                'User-Agent':
-                'SignalTrace/0.1 (+https://example.com; educational project)',
-                Accept: 'text/html,application/xhtml+xml',
-            },
+            redirect: 'follow',
+            headers: buildFetchHeaders(url),
         });
     } finally {
         clearTimeout(timeout);
     };
     
-    if (!response.ok) throw new Error(`Failed to fetch article. Status: ${response.status}`);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch article. Status: ${response.status} ${response.statusText} Final URL: ${response.url || url}`);
+    };
 
     const finalUrl = response.url || url;
     if(isGoogleRedirectHost(finalUrl)) {
@@ -168,6 +179,8 @@ async function traceArticleFromUrl(url) {
     const readableArticle = reader.parse();
 
     const title = readableArticle?.title || document.title || null;
+    const source = readableArticle?.siteName || readableArticle?.source || deriveSourceFromUrl(url);
+    
     const articleText = readableArticle?.textContent || '';
     const traceStatus = hasUsableArticleText(articleText)
     ? 'fetched'
@@ -239,6 +252,7 @@ async function traceArticleFromUrl(url) {
     return {
         title,
         author,
+        source,
         articleText,
         excerpt,
         outboundLinks,

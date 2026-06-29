@@ -58,7 +58,7 @@ module.exports.dashboard_get = async (req, res) => {
     state.payload = await Article.find({ traceStatus: 'fetched'})
     .select(' _id source title author link publishedAt traceStatus')
     .sort({ publishedAt: -1, createdAt: -1 })
-    .limit(50);
+    .limit(500);
     res.render('dashboard', { state });
 };
 

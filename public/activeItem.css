@@ -4,6 +4,7 @@
 
 .active-item-view {
     margin: 60px 4px 0 4px;
+    padding: 48px;
     background-color: var(--button-color);
     border-radius: 24px;
     box-shadow: 0 8px 32px hsla(0, 0%, 0%, 0.5);
@@ -11,7 +12,19 @@
  
     transition: all 250ms ease-in-out;
 
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     flex: 1 0 324px;
+}
+
+.active-item-view .author-source-block {
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+}
+
+.active-item-author,
+.active-item-break,
+.active-item-source {
+    padding: 0 12px;
 }
