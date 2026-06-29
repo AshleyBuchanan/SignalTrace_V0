@@ -40,6 +40,7 @@ setTimeout( async () => {
                 document.querySelector('.active-item-source').textContent = data.source || '';
                 document.querySelector('.active-item-articleText').textContent = data.articleText || '';
                 document.querySelector('.active-item-view-label').textContent = `UpdatedAt: ${data.updatedAt}` || 'Active Item View';
+                document.querySelector('.active-item-signalScore-value').textContent = data.signalScore || '0';
             };
             
         } catch (err) {
